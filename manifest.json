@@ -1,0 +1,21 @@
+{
+  "name": "SUPORTE DOS CRIA",
+  "short_name": "SUPORTE CRIA",
+  "description": "Ferramentas para motoristas da Shopee",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FB641B",
+  "icons": [
+    {
+      "src": "images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

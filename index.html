@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPORTE DOS CRIA - Apoio aos Motoristas Shopee</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FB641B">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>SUPORTE DOS CRIA</h1>
+                <p>Ferramentas para motoristas Shopee</p>
+            </div>
+            <nav>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="menu" id="menu">
+                    <li><a href="#busca-cep">Buscar CEP</a></li>
+                    <li><a href="#calculadoras">Calculadoras</a></li>
+                    <li><a href="#otimizacao-rota">Otimizar Rota</a></li>
+                    <li><a href="#suporte">Suporte</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Seção de Busca de CEP -->
+        <section id="busca-cep" class="section">
+            <div class="container">
+                <h2>Busca de CEP</h2>
+                <div class="card">
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> Esta ferramenta permite encontrar endereços completos a partir do CEP e visualizar a localização no mapa.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="cep">Digite o CEP:</label>
+                        <input type="text" id="cep" placeholder="00000-000" maxlength="9">
+                        <button id="buscarCep" class="btn">Buscar CEP</button>
+                    </div>
+                    <div id="resultado-cep" class="resultado">
+                        <div class="endereco-info">
+                            <p><strong>Endereço:</strong> <span id="endereco">-</span></p>
+                            <p><strong>Bairro:</strong> <span id="bairro">-</span></p>
+                            <p><strong>Cidade/UF:</strong> <span id="cidade-uf">-</span></p>
+                        </div>
+                        <div id="map" class="map-container"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Calculadoras -->
+        <section id="calculadoras" class="section">
+            <div class="container">
+                <h2>Calculadoras</h2>
+                <div class="calculadoras-grid">
+                    <!-- Calculadora de Combustível -->
+                    <div class="card">
+                        <h3>Calculadora de Combustível</h3>
+                        <div class="info-box">
+                            <p><i class="fas fa-info-circle"></i> Calcule quanto você gastará em combustível com base na quilometragem, valor do litro e consumo do seu veículo.</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="quilometragem">Quilometragem estimada (km):</label>
+                            <input type="number" id="quilometragem" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="valor-litro">Valor do litro (R$):</label>
+                            <input type="number" id="valor-litro" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="consumo">Consumo do veículo (km/l):</label>
+                            <input type="number" id="consumo" placeholder="0.0" step="0.1">
+                        </div>
+                        <button id="calcularCombustivel" class="btn">Calcular</button>
+                        <div class="resultado">
+                            <p><strong>Gasto estimado:</strong> R$ <span id="resultado-combustivel">0.00</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Calculadora de Entregas -->
+                    <div class="card">
+                        <h3>Calculadora de Entregas</h3>
+                        <div class="info-box">
+                            <p><i class="fas fa-info-circle"></i> Estime o tempo necessário para completar suas entregas com base na quantidade de pacotes e paradas.</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="qtd-pacotes">Quantidade de pacotes:</label>
+                            <input type="number" id="qtd-pacotes" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="qtd-paradas">Quantidade de paradas (casas):</label>
+                            <input type="number" id="qtd-paradas" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="tempo-entrega">Tempo médio por entrega (minutos):</label>
+                            <select id="tempo-entrega">
+                                <option value="1">1 minuto</option>
+                                <option value="2">2 minutos</option>
+                                <option value="3" selected>3 minutos</option>
+                                <option value="4">4 minutos</option>
+                                <option value="5">5 minutos</option>
+                                <option value="6">6 minutos</option>
+                                <option value="7">7 minutos</option>
+                                <option value="8">8 minutos</option>
+                            </select>
+                        </div>
+                        <button id="calcularEntregas" class="btn">Calcular</button>
+                        <div class="resultado">
+                            <p><strong>Tempo estimado:</strong> <span id="resultado-entregas">0</span> minutos</p>
+                            <p><strong>Em horas:</strong> <span id="resultado-entregas-horas">0</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Otimização de Rota -->
+        <section id="otimizacao-rota" class="section">
+            <div class="container">
+                <h2>Otimização de Rota</h2>
+                <div class="card">
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> Organize suas entregas agrupando pacotes por endereço para otimizar seu tempo.</p>
+                    </div>
+                    <div class="instrucoes">
+                        <h3>Como usar:</h3>
+                        <ol>
+                            <li>Copie os dados da sua planilha de rotas</li>
+                            <li>Cole no campo abaixo</li>
+                            <li>Clique em "Otimizar Rota"</li>
+                        </ol>
+                        <div class="exemplo-img">
+                            <img src="images/planilha-original.jpg" alt="Exemplo da planilha original" id="exemplo-img" style="max-width: 100%; margin-bottom: 15px;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dados-rota">Cole os dados da planilha:</label>
+                        <textarea id="dados-rota" rows="10" placeholder="Cole aqui os dados da sua planilha de rotas..."></textarea>
+                    </div>
+                    <div class="botoes-grupo">
+                        <button id="limparDados" class="btn btn-secondary">Limpar</button>
+                        <button id="carregarExemplo" class="btn btn-secondary">Carregar Exemplo</button>
+                        <button id="otimizarRota" class="btn">Otimizar Rota</button>
+                        <button id="gerarPDF" class="btn btn-secondary" disabled>Gerar PDF</button>
+                        <button id="compartilharWhatsApp" class="btn btn-whatsapp" disabled>
+                            <i class="fab fa-whatsapp"></i> Copiar para WhatsApp
+                        </button>
+                    </div>
+                    <div id="resultado-rota" class="resultado">
+                        <div id="rota-otimizada"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Links Rápidos -->
+        <section id="links-rapidos" class="section">
+            <div class="container">
+                <h2>Links Rápidos</h2>
+                <div class="links-grid">
+                    <a href="https://docs.google.com/forms/d/1PqeA3JWDK2D3nhH7NS8jReocrTxlXl60gWTh0eeZLwU/edit" target="_blank" class="link-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Confirmar Disponibilidade</span>
+                    </a>
+                    <a href="https://www.nfse.gov.br/EmissorNacional/Login?ReturnUrl=%2fEmissorNacional" target="_blank" class="link-card">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Nota Fiscal Eletrônica</span>
+                    </a>
+                    <a href="https://www.google.com/maps/place/GLP+CAMPO+GRANDE/@-22.866353,-43.5745271,17z/data=!3m1!4b1!4m6!3m5!1s0x9be32334b3fab9:0xf5f555d70fe8c22f!8m2!3d-22.866353!4d-43.5745271!16s%2Fg%2F11rts0d5r0?entry=ttu" target="_blank" class="link-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Localização do Hub</span>
+                    </a>
+                    <a href="https://wa.me/5521971072410" target="_blank" class="link-card">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>Suporte via WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Ajuda PNR -->
+        <section id="suporte" class="section">
+            <div class="container">
+                <h2>Ajuda de Pedido Não Recebido (PNR)</h2>
+                <div class="card">
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> Gere mensagens padronizadas para verificar se o cliente recebeu o pedido.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="nome-cliente">Nome do Cliente:</label>
+                        <input type="text" id="nome-cliente" placeholder="Nome completo do cliente">
+                    </div>
+                    <div class="form-group">
+                        <label for="nome-motorista">Nome do Motorista:</label>
+                        <input type="text" id="nome-motorista" placeholder="Seu nome completo">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigo-pedido">Código do Pedido:</label>
+                        <input type="text" id="codigo-pedido" placeholder="Ex: BR123456789">
+                    </div>
+                    <button id="gerarMensagemPNR" class="btn">Gerar Mensagem</button>
+                    <div class="resultado">
+                        <div class="mensagem-pnr" id="mensagem-pnr"></div>
+                        <button id="copiarMensagemPNR" class="btn btn-secondary" disabled>Copiar Mensagem</button>
+                        <button id="enviarWhatsAppPNR" class="btn btn-whatsapp" disabled>
+                            <i class="fab fa-whatsapp"></i> Enviar via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Como Instalar o App -->
+        <section id="instalar-app" class="section">
+            <div class="container">
+                <h2>Como Instalar o App</h2>
+                <div class="card">
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> Instale este site como um aplicativo no seu celular para acesso rápido e offline.</p>
+                    </div>
+                    <div class="instrucoes">
+                        <div class="app-install-steps">
+                            <div class="install-step">
+                                <h3>No Android:</h3>
+                                <ol>
+                                    <li>Abra o site no Chrome</li>
+                                    <li>Toque no menu (três pontos) no canto superior direito</li>
+                                    <li>Selecione "Adicionar à tela inicial"</li>
+                                    <li>Confirme a adição</li>
+                                </ol>
+                            </div>
+                            
+                            <div class="install-step">
+                                <h3>No iPhone:</h3>
+                                <ol>
+                                    <li>Abra o site no Safari</li>
+                                    <li>Toque no ícone de compartilhamento (retângulo com seta)</li>
+                                    <li>Role para baixo e toque em "Adicionar à Tela de Início"</li>
+                                    <li>Confirme a adição</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div class="app-benefits">
+                            <h3>Benefícios:</h3>
+                            <ul>
+                                <li>Acesso rápido sem precisar abrir o navegador</li>
+                                <li>Funciona offline para algumas funções</li>
+                                <li>Interface otimizada para celular</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Vídeo Tutorial Nota Fiscal -->
+        <section id="tutorial-nfse" class="section">
+            <div class="container">
+                <h2>Tutorial de Nota Fiscal Eletrônica</h2>
+                <div class="card">
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> Aprenda como emitir sua Nota Fiscal Eletrônica corretamente.</p>
+                    </div>
+                    <div class="video-container">
+                        <iframe width="100%" height="315" src="https://drive.google.com/file/d/1Ot6LEI-RR-oMoydtflle3hJ7iJvw-3n3/preview" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <div class="tutorial-info">
+                        <a href="https://www.nfse.gov.br/EmissorNacional/Login?ReturnUrl=%2fEmissorNacional" target="_blank" class="btn">
+                            <i class="fas fa-external-link-alt"></i> Acessar Portal NFSe
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SUPORTE DOS CRIA - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/cep.js"></script>
+    <script src="js/calculadoras.js"></script>
+    <script src="js/rota.js"></script>
+    <script src="js/pnr.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly" defer></script>
+    <script src="js/nota-fiscal-video.js"></script>
+    <script src="js/pwa-instructions.js"></script>
+    <script src="js/ui-enhancements.js"></script>
+    <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function() {
+        navigator.serviceWorker.register("/service-worker.js")
+          .then(function(registration) {
+            console.log("Service Worker registrado com sucesso:", registration.scope);
+          })
+          .catch(function(error) {
+            console.log("Falha ao registrar Service Worker:", error);
+          });
+      });
+    }
+    </script>
+</body>
+</html>
