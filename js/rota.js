@@ -514,125 +514,130 @@ AT202504182EZ5C	54	8	BR256928440497K	Caminho Margem do Rio Ita, 129, Depois do C
         }
     }
     
-    // Função para compartilhar via WhatsApp
+    // Função para compartilhar via WhatsApp - CORRIGIDA
     function compartilharWhatsApp() {
         if (!dadosProcessados) {
             alert('Por favor, otimize a rota primeiro.');
             return;
         }
         
-        // Criar mensagem formatada no novo formato solicitado
-        let mensagem = '🚚 *ROTA OTIMIZADA* 🚚\n\n';
-        
-        Object.keys(dadosProcessados).sort().forEach(rua => {
-            const pacotes = dadosProcessados[rua];
+        try {
+            // Criar mensagem formatada com caracteres simples primeiro
+            let mensagem = 'ROTA OTIMIZADA\n\n';
             
-            mensagem += `🛣️ ${rua}\n\n`;
-            
-            // Agrupar pacotes por número de endereço
-            const pacotesPorNumero = {};
-            
-            pacotes.forEach(pacote => {
-                const numero = pacote.numeroEndereco || 'S/N';
-                if (!pacotesPorNumero[numero]) {
-                    pacotesPorNumero[numero] = [];
-                }
-                pacotesPorNumero[numero].push(pacote);
-            });
-            
-            // Adicionar cada grupo de pacotes por número
-            Object.keys(pacotesPorNumero).sort((a, b) => {
-                // Ordenar numericamente se possível
-                const numA = parseInt(a);
-                const numB = parseInt(b);
-                if (!isNaN(numA) && !isNaN(numB)) {
-                    return numA - numB;
-                }
-                return a.localeCompare(b);
-            }).forEach(numero => {
-                const pacotesNumero = pacotesPorNumero[numero];
+            Object.keys(dadosProcessados).sort().forEach(rua => {
+                const pacotes = dadosProcessados[rua];
                 
-                // Obter complemento do endereço (após a vírgula)
-                let complemento = '';
-                if (pacotesNumero[0].endereco.includes(',')) {
-                    const partes = pacotesNumero[0].endereco.split(',');
-                    if (partes.length > 1) {
-                        complemento = partes.slice(1).join(',').trim();
+                mensagem += `Caminho ${rua}\n\n`;
+                
+                // Agrupar pacotes por número de endereço
+                const pacotesPorNumero = {};
+                
+                pacotes.forEach(pacote => {
+                    const numero = pacote.numeroEndereco || 'S/N';
+                    if (!pacotesPorNumero[numero]) {
+                        pacotesPorNumero[numero] = [];
                     }
-                }
+                    pacotesPorNumero[numero].push(pacote);
+                });
                 
-                mensagem += `📦 Pacotes: ${pacotesNumero.map(p => p.sequencia).join(', ')}\n`;
-                mensagem += `${numero}${complemento ? `, ${complemento}` : ''}\n\n`;
+                // Adicionar cada grupo de pacotes por número
+                Object.keys(pacotesPorNumero).sort((a, b) => {
+                    // Ordenar numericamente se possível
+                    const numA = parseInt(a);
+                    const numB = parseInt(b);
+                    if (!isNaN(numA) && !isNaN(numB)) {
+                        return numA - numB;
+                    }
+                    return a.localeCompare(b);
+                }).forEach(numero => {
+                    const pacotesNumero = pacotesPorNumero[numero];
+                    
+                    // Obter complemento do endereço (após a vírgula)
+                    let complemento = '';
+                    if (pacotesNumero[0].endereco.includes(',')) {
+                        const partes = pacotesNumero[0].endereco.split(',');
+                        if (partes.length > 1) {
+                            complemento = partes.slice(1).join(',').trim();
+                        }
+                    }
+                    
+                    mensagem += `${numero}${complemento ? `, ${complemento}` : ''}\n`;
+                    mensagem += `Pacotes: ${pacotesNumero.map(p => p.sequencia).join(', ')}\n\n`;
+                });
+                
+                mensagem += `${pacotes.length} pacote${pacotes.length !== 1 ? 's' : ''} nesse endereço\n\n`;
             });
             
-            mensagem += `🧾 ${pacotes.length} pacote${pacotes.length !== 1 ? 's' : ''} nesse endereço\n\n`;
-        });
-        
-        // Adicionar rodapé
-        mensagem += '🔧 Gerado por SUPORTE DOS CRIA';
-        
-        // Copiar para a área de transferência
-        navigator.clipboard.writeText(mensagem)
-            .then(() => {
-                alert('Texto copiado para a área de transferência! Você pode colar no WhatsApp.');
-            })
-            .catch(err => {
-                console.error('Erro ao copiar texto: ', err);
-                
-                // Fallback: mostrar a mensagem para o usuário copiar manualmente
-                const textarea = document.createElement('textarea');
-                textarea.value = mensagem;
-                textarea.style.position = 'fixed';
-                textarea.style.opacity = 0;
-                document.body.appendChild(textarea);
-                textarea.select();
-                
-                try {
-                    document.execCommand('copy');
+            // Adicionar rodapé
+            mensagem += 'Gerado por SUPORTE DOS CRIA';
+            
+            // Copiar para a área de transferência
+            navigator.clipboard.writeText(mensagem)
+                .then(() => {
                     alert('Texto copiado para a área de transferência! Você pode colar no WhatsApp.');
-                } catch (e) {
-                    console.error('Erro ao copiar texto: ', e);
-                    alert('Não foi possível copiar automaticamente. Por favor, copie o texto manualmente.');
+                })
+                .catch(err => {
+                    console.error('Erro ao copiar texto: ', err);
                     
-                    // Mostrar a mensagem em um modal ou área visível
-                    const mensagemDiv = document.createElement('div');
-                    mensagemDiv.style.position = 'fixed';
-                    mensagemDiv.style.top = '50%';
-                    mensagemDiv.style.left = '50%';
-                    mensagemDiv.style.transform = 'translate(-50%, -50%)';
-                    mensagemDiv.style.backgroundColor = 'white';
-                    mensagemDiv.style.padding = '20px';
-                    mensagemDiv.style.borderRadius = '10px';
-                    mensagemDiv.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
-                    mensagemDiv.style.zIndex = '9999';
-                    mensagemDiv.style.maxWidth = '80%';
-                    mensagemDiv.style.maxHeight = '80%';
-                    mensagemDiv.style.overflow = 'auto';
-                    mensagemDiv.style.whiteSpace = 'pre-wrap';
+                    // Fallback: mostrar a mensagem para o usuário copiar manualmente
+                    const textarea = document.createElement('textarea');
+                    textarea.value = mensagem;
+                    textarea.style.position = 'fixed';
+                    textarea.style.opacity = 0;
+                    document.body.appendChild(textarea);
+                    textarea.select();
                     
-                    const closeBtn = document.createElement('button');
-                    closeBtn.textContent = 'Fechar';
-                    closeBtn.style.marginTop = '10px';
-                    closeBtn.style.padding = '5px 10px';
-                    closeBtn.style.backgroundColor = '#FB641B';
-                    closeBtn.style.color = 'white';
-                    closeBtn.style.border = 'none';
-                    closeBtn.style.borderRadius = '5px';
-                    closeBtn.style.cursor = 'pointer';
+                    try {
+                        document.execCommand('copy');
+                        alert('Texto copiado para a área de transferência! Você pode colar no WhatsApp.');
+                    } catch (e) {
+                        console.error('Erro ao copiar texto: ', e);
+                        alert('Não foi possível copiar automaticamente. Por favor, copie o texto manualmente.');
+                        
+                        // Mostrar a mensagem em um modal ou área visível
+                        const mensagemDiv = document.createElement('div');
+                        mensagemDiv.style.position = 'fixed';
+                        mensagemDiv.style.top = '50%';
+                        mensagemDiv.style.left = '50%';
+                        mensagemDiv.style.transform = 'translate(-50%, -50%)';
+                        mensagemDiv.style.backgroundColor = 'white';
+                        mensagemDiv.style.padding = '20px';
+                        mensagemDiv.style.borderRadius = '10px';
+                        mensagemDiv.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+                        mensagemDiv.style.zIndex = '9999';
+                        mensagemDiv.style.maxWidth = '80%';
+                        mensagemDiv.style.maxHeight = '80%';
+                        mensagemDiv.style.overflow = 'auto';
+                        mensagemDiv.style.whiteSpace = 'pre-wrap';
+                        
+                        const closeBtn = document.createElement('button');
+                        closeBtn.textContent = 'Fechar';
+                        closeBtn.style.marginTop = '10px';
+                        closeBtn.style.padding = '5px 10px';
+                        closeBtn.style.backgroundColor = '#FB641B';
+                        closeBtn.style.color = 'white';
+                        closeBtn.style.border = 'none';
+                        closeBtn.style.borderRadius = '5px';
+                        closeBtn.style.cursor = 'pointer';
+                        
+                        closeBtn.addEventListener('click', () => {
+                            document.body.removeChild(mensagemDiv);
+                        });
+                        
+                        mensagemDiv.textContent = mensagem;
+                        mensagemDiv.appendChild(document.createElement('br'));
+                        mensagemDiv.appendChild(closeBtn);
+                        
+                        document.body.appendChild(mensagemDiv);
+                    }
                     
-                    closeBtn.addEventListener('click', () => {
-                        document.body.removeChild(mensagemDiv);
-                    });
-                    
-                    mensagemDiv.textContent = mensagem;
-                    mensagemDiv.appendChild(document.createElement('br'));
-                    mensagemDiv.appendChild(closeBtn);
-                    
-                    document.body.appendChild(mensagemDiv);
-                }
-                
-                document.body.removeChild(textarea);
-            });
+                    document.body.removeChild(textarea);
+                });
+        } catch (error) {
+            console.error('Erro ao compartilhar via WhatsApp:', error);
+            alert('Erro ao compartilhar via WhatsApp. Verifique o console para mais detalhes.');
+        }
     }
     
     // Adicionar estilo para os novos elementos
