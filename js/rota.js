@@ -514,7 +514,7 @@ AT202504182EZ5C	54	8	BR256928440497K	Caminho Margem do Rio Ita, 129, Depois do C
         }
     }
     
-    // Função para compartilhar via WhatsApp - CORRIGIDA
+    // Função para compartilhar via WhatsApp - SOLUÇÃO ALTERNATIVA
     function compartilharWhatsApp() {
         if (!dadosProcessados) {
             alert('Por favor, otimize a rota primeiro.');
@@ -522,13 +522,30 @@ AT202504182EZ5C	54	8	BR256928440497K	Caminho Margem do Rio Ita, 129, Depois do C
         }
         
         try {
-            // Criar mensagem formatada com caracteres simples primeiro
-            let mensagem = 'ROTA OTIMIZADA\n\n';
+            // Criar mensagem formatada com ASCII puro
+            let mensagem = "ROTA OTIMIZADA\n\n";
+            const dataHora = new Date().toLocaleString('pt-BR');
+            mensagem += `Gerado em: ${dataHora}\n\n`;
             
             Object.keys(dadosProcessados).sort().forEach(rua => {
                 const pacotes = dadosProcessados[rua];
                 
-                mensagem += `Caminho ${rua}\n\n`;
+                // Usar "=" para criar uma linha de cabeçalho
+                mensagem += "=";
+                for (let i = 0; i < rua.length; i++) {
+                    mensagem += "=";
+                }
+                mensagem += "\n";
+                
+                // Nome da rua com formatação simples
+                mensagem += `${rua}\n`;
+                
+                // Usar "=" para fechar a linha de cabeçalho
+                mensagem += "=";
+                for (let i = 0; i < rua.length; i++) {
+                    mensagem += "=";
+                }
+                mensagem += "\n\n";
                 
                 // Agrupar pacotes por número de endereço
                 const pacotesPorNumero = {};
@@ -566,7 +583,7 @@ AT202504182EZ5C	54	8	BR256928440497K	Caminho Margem do Rio Ita, 129, Depois do C
                     mensagem += `Pacotes: ${pacotesNumero.map(p => p.sequencia).join(', ')}\n\n`;
                 });
                 
-                mensagem += `${pacotes.length} pacote${pacotes.length !== 1 ? 's' : ''} nesse endereço\n\n`;
+                mensagem += `${pacotes.length} pacote${pacotes.length !== 1 ? 's' : ''} nesse endereco\n\n`;
             });
             
             // Adicionar rodapé
