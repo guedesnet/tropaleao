@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPORTE DOS CRIA - Apoio aos Motoristas Shopee</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FB641B">
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16.png">
+    <link rel="icon" href="favicon/favicon.ico">
+    <link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon/android-chrome-192.png">
+    
+    <style>
+    /* Estilos inline para a logo */
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .logo-image {
+        width: 60px;
+        height: 60px;
+        background-image: url('data:image/png;base64,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');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 5px;
+    }
+    
+    .logo {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .logo h1 {
+        margin: 0;
+        margin-bottom: 5px;
+    }
+    
+    .logo p {
+        margin: 0;
+    }
+    
+    @media (max-width: 768px) {
+        .logo-container {
+            flex-direction: row;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .logo-image {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+        
+        .logo p {
+            font-size: 0.8rem;
+        }
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo-image"></div>
+                <div class="logo">
+                    <h1>SUPORTE DOS CRIA</h1>
+                    <p>Ferramentas para motoristas Shopee</p>
+                </div>
+            </div>
+            <nav>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="menu" id="menu">
+                    <li><a href="#busca-cep">Buscar CEP</a></li>
+                    <li><a href="#calculadoras">Calculadoras</a></li>
+                    <li><a href="#otimizacao-rota">Otimizar Rota</a></li>
+                    <li><a href="#suporte">Suporte</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Resto do conteúdo do site permanece igual -->
+        <!-- Seção de Busca de CEP -->
+        <section id="busca-cep" class="section">
+            <div class="container">
+                <h2>Busca de CEP</h2>
+                <div class="card">
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> Esta ferramenta permite encontrar endereços completos a partir do CEP e visualizar a localização no mapa.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="cep">Digite o CEP:</label>
+                        <input type="text" id="cep" placeholder="00000-000" maxlength="9">
+                        <button id="buscarCep" class="btn">Buscar CEP</button>
+                    </div>
+                    <div id="resultado-cep" class="resultado">
+                        <div class="endereco-info">
+                            <p><strong>Endereço:</strong> <span id="endereco">-</span></p>
+                            <p><strong>Bairro:</strong> <span id="bairro">-</span></p>
+                            <p><strong>Cidade/UF:</strong> <span id="cidade-uf">-</span></p>
+                        </div>
+                        <div id="map" class="map-container"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Restante do conteúdo do site... -->
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SUPORTE DOS CRIA - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/rota.js"></script>
+</body>
+</html>
